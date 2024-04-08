@@ -1,1 +1,23 @@
-https://github.com/dorkakovacs/sql.git
+SELECT IIF (YEAR(REND_DATUM) IS NULL, 'Összesen',
+        CAST((YEAR(REND_DATUM)) AS NVARCHAR(4))),
+        SUM(MENNYISEG*EGYSEGAR) AS 'rendelés összege'
+FROM Rendeles r JOIN Rendeles_tetel rt ON r.SORSZAM=rt.SORSZAM
+WHERE LOGIN='norbert2'
+GROUP BY ROLLUP(YEAR(REND_DATUM))
+
+
+SELECT r.SZALL_DATUM,
+        r.SZALL_MOD,
+        SUM(MENNYISEG)
+FROM Rendeles r JOIN Rendeles_tetel rt ON r.SORSZAM=rt.SORSZAM
+                JOIN Termek t ON t.TERMEKKOD=rt.TERMEKKOD
+WHERE t.MEGYS='db'
+GROUP BY ROLLUP(r.SZALL_DATUM, r.SZALL_MOD)
+HAVING r.SZALL_MOD IS NULL OR r.SZALL_DATUM IS NULL
+
+6.
+SELECT *,
+        CASE WHEN LAG(NEV) OVER(ORDER BY nev) IS NULL THEN 'Nincs' ELSE LAG(NEV) OVER(ORDER BY nev) END AS 'Előző ügyfél',
+        CASE WHEN LEAD(NEV) OVER(ORDER BY nev) IS NULL THEN 'Nincs' ELSE LEAD(NEV) OVER(ORDER BY nev) END AS 'Következő ügyfél'
+
+FROM Ugyfel
