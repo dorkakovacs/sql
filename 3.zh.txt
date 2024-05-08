@@ -1,0 +1,23 @@
+1.FELADAT
+filter: {languages.0: English, awards.wins: 2}
+
+project: {title: 1, cast: 1, director: 1, year: 1}
+
+sort: {year: -1}
+
+2.FELADAT
+db.users.find({"email":{$regex:/.com/}},{"name":1, "email":1, "_id":0})
+
+3.feladat
+db.movies.aggregate([{"$match":{"year":{$gt: 1950}}},{"$group": {_id:"$year", total:{$avg:"$runtime"}}}])
+
+4.FELADAT
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE m.released>1960
+RETURN p.name AS `Név`, m.title AS `Cím`, m.released AS `Megjelenés éve`
+ORDER BY m.released DESC
+
+5.FELADAT
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE p.born > 1980
+RETURN p.name AS `Actor`, p.born AS `BirthYear`, COUNT(m.title) AS `NumMoviesActedIn`
