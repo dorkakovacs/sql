@@ -1,0 +1,52 @@
+1. FELADAT
+
+SELECT SZOBA_ID,
+        COUNT(*) AS 'Db'
+FROM Szoba sz LEFT JOIN Foglalas f ON sz.SZOBA_ID = f.SZOBA_FK
+GROUP BY sz.SZOBA_ID
+
+2. FELADAT
+
+SELECT szh.SZALLAS_ID, szh.SZALLAS_NEV, szh.CSILLAGOK_SZAMA, szh.HELY
+FROM Szallashely szh
+    JOIN (  SELECT HELY, MAX(CSILLAGOK_SZAMA) as maxcs
+            FROM Szallashely
+            GROUP BY HELY
+            ) AS max ON szh.HELY = max.HELY AND szh.CSILLAGOK_SZAMA = max.maxcs
+
+3. FELADAT
+
+SELECT v.USERNEV,
+        v.NEV,
+        v.SZUL_DAT,
+        MIN(f.METTOL) AS "Első  foglalás",
+        MAX(f.METTOL) AS "Utolsó foglalás"
+FROM vendeg v JOIN foglalas f ON v.USERNEV = f.UGYFEL_FK
+GROUP BY v.USERNEV, v.NEV, v.SZUL_DAT
+ORDER BY v.USERNEV
+
+4. FELADAT
+
+
+5. FELADAT
+
+CREATE TABLE #MASKED_GUEST(
+	[USERNEV] [nvarchar](20) NOT NULL,
+	[NEV] [nvarchar](50) masked with (function = 'partial(2,"XXX",3)'),
+	[EMAIL] [nvarchar](60) NOT NULL,
+	[SZAML_CIM] [nvarchar](100) NULL,
+	[SZUL_DAT] [date] NULL
+) ON [PRIMARY]
+
+6. FELADAT
+HSET IRO:1 ID 1 nev "Petőfi Sándor" nemzetiseg "magyar"
+HSET IRO:2 ID 2 nev "William Shakespeare" nemzetiseg "angol"
+
+HSET KONYV:1 ID 1 cim "valami" mufaj "vers" IRO_ID 1
+HSET KONYV:2 ID 2 cim "Rómeó és Júlia" mufaj "dráma" IRO_ID 2
+
+7. FELADAT 
+
+CREATE TABLE student ( ID INT, Nev TEXT, Teljesitett_felevek LIST<INT>, Eredmenyek MAP<INT, DECIMAL>, Nyelvtudas SET<TEXT>, PRIMARY KEY (ID));
+INSERT INTO student (ID, Nev, Teljesitett_felevek, Eredmenyek, Nyelvtudas) VALUES (1, 'Mikulás Marcell', [2], {1: 4.87, 2: 4.99}, {'angol', 'spanyol'}, 'Student01');
+INSERT INTO student (ID, Nev, Teljesitett_felevek, Eredmenyek, Nyelvtudas) VALUES (2, 'Kozma Zsófia', [2], {1: 4.33, 2: 4.59}, {'angol', 'német'}, 'Student02');
