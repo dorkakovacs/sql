@@ -27,6 +27,9 @@ ORDER BY v.USERNEV
 
 4. FELADAT
 
+MATCH (p:Person {name: "Tom Hanks"})-[:ACTED_IN]->(movie:Movie)<-[:ACTED_IN]-(p2:Person)
+WHERE p2.name <> "Tom Hanks"
+RETURN DISTINCT p2.name
 
 5. FELADAT
 
